@@ -1,13 +1,15 @@
 import { Component } from 'react';
+import { Circles } from 'react-loader-spinner';
 
 import Searchbar from './Searchbar/Searchbar';
 import ImageGallery from './ImageGallery/ImageGallery';
-import Circles from './Loader/Loader';
 import Button from './Button/Button';
 import Modal from './Modal/Modal';
 import ImageDeteils from './ImageDeteils/ImageDeteils';
 
-import { fetchImagesApi } from './Services/api';
+// import { Audio } from 'react-loader-spinner';
+
+import { fetchImagesApi } from '../Services/api';
 
 export class App extends Component {
   state = {
@@ -28,6 +30,7 @@ export class App extends Component {
   }
   async fetchImages() {
     try {
+      this.setState({ isLoading: true });
       const { search, page } = this.state;
       const data = await fetchImagesApi(search, page);
       this.setState(prevState => {
@@ -68,15 +71,31 @@ export class App extends Component {
   };
 
   render() {
-    const { images, isLoading, currentImage, showModal } = this.state;
+    const { images, isLoading, currentImage, showModal, error } = this.state;
     const { searchImages, loadMore, showImage, closeModal } = this;
     return (
       <>
         <Searchbar onSubmit={searchImages} />
-        {isLoading && <Circles />}
-        <ImageGallery images={images} showImage={showImage} />
+
+        {Boolean(images.length) && (
+          <ImageGallery images={images} showImage={showImage} />
+        )}
+        {error && <p>{error}</p>}
+
         {Boolean(images.length) && (
           <Button text="Load more" clickHandler={loadMore} />
+        )}
+        {isLoading && (
+          <Circles
+            height="80"
+            width="80"
+            color="#4fa94d"
+            ariaLabel="circles-loading"
+            wrapperStyle={{
+            }}
+            wrapperClass=""
+            visible={true}
+          />
         )}
         {showModal && (
           <Modal close={closeModal}>

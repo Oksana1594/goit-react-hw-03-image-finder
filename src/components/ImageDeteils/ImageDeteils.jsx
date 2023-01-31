@@ -7,4 +7,5 @@ export default ImageDeteils;
 
 ImageDeteils.propTypes = {
   tags: PropTypes.string.isRequired,
+  largeImageURL: PropTypes.string.isRequired,
 };
